@@ -1,4 +1,3 @@
-```python
 from zhipuai import ZhipuAI
 import requests
 import streamlit as st
@@ -51,7 +50,7 @@ def generate_golden_sentence():
 def generate_lyrics(theme, demand):
     try:
         response = client.chat.completions.create(
-            model="glm - 4 - airx",
+            model="glm-4-airx",
             messages=[{
                 "role": "user",
                 "content": "As a Chinese - language lyric - writing expert, please write a song for me."
@@ -472,4 +471,4 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 底部版权
-st.markdown("<footer>© 2024 最终版权刘昱樟所有 “智音”音乐生成器</footer>", unsafe_allow_html=True)
+st.markdown("<footer>© 2024 最终版权 刘昱樟所有 </footer>", unsafe_allow_html=True)
