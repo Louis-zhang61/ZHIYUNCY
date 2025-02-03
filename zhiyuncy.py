@@ -1,3 +1,4 @@
+```python
 from zhipuai import ZhipuAI
 import requests
 import streamlit as st
@@ -6,6 +7,7 @@ import time
 import random
 import os
 from pychorus import find_and_output_chorus
+
 
 # 初始化智谱AI客户端
 client = ZhipuAI(api_key="d6415b0b9a8f5d2a18463afc7b617b05.L0aTMIsPzFAsQL3k")
@@ -20,58 +22,60 @@ X_USERID = "abc001"
 
 # 金句
 GOLDEN_SENTENCES = [
-    "人生如逆旅，我亦是行人。",
-    "在浩瀚星空下，我追寻那颗属于我的星。",
-    "爱像花开，经历风雨后，才会绽放出最美的色彩。",
-    "岁月如歌，旋律交错，愿与你共舞在时光的舞台。",
-    "尘世的喧嚣中，唯有你的笑声像清风，拂去我的忧虑.",
-    "在梦的深处，我与你的灵魂共舞，跨越时间的界限",
-    "每一张泛黄的照片，都藏着我们曾经的青春与梦想",
-    "让风带走我对你的思念，随它漂流到遥远的天际",
-    "时间的指针不会倒转，但我会在回忆中永远守护你。",
-    "浮云逐梦，归根若水，愿与君长行此生。",
-    "灯下独坐，思君若渴，愿随岁月，共逐晨昏。",
-    "风送梅香，雪落点滴，岁月悠悠，唯愿共赏",
-    "孤舟泛影，月照江波，心向远方，与你同舟",
-    "时光荏苒，情愫未减，君可否共许我一世长安？",
-    "寒窗独坐，夜雨悄然，心似荒草，泪已成诗",
-    "花谢花飞，岁月无情，长空归影，唯泪痕累累。",
-    "繁花盛开，笑声如歌，青涩的岁月里，满是梦的痕迹",
-    "独自一人看花落，心中却充满了与你的美好回忆"
+    "Life is like a journey against the current, and I am also a passer - by.",
+    "Under the vast starry sky, I pursue the star that belongs to me.",
+    "Love is like a flower blooming. Only after experiencing wind and rain can it bloom in the most beautiful colors.",
+    "Time is like a song, with melodies intertwined. I wish to dance with you on the stage of time.",
+    "In the hustle and bustle of the world, only your laughter is like a gentle breeze, sweeping away my worries.",
+    "In the depths of my dreams, my soul dances with yours,跨越 the boundaries of time.",
+    "Every yellowed photo holds our youth and dreams of the past.",
+    "Let the wind carry my yearning for you and drift it to the distant sky.",
+    "The hands of time will not turn back, but I will always guard you in my memories.",
+    "Floating clouds chase dreams, and return to water as their roots. I wish to walk with you throughout this life.",
+    "Sitting alone under the lamp, I miss you eagerly. I wish to follow the years and share the morning and evening with you.",
+    "The wind sends the fragrance of plum blossoms, and snowflakes fall bit by bit. Time passes slowly, and I only wish to enjoy it with you.",
+    "A solitary boat casts a shadow, and the moon shines on the river waves. My heart is towards the distance, and I wish to be in the same boat with you.",
+    "As time goes by, my feelings remain unchanged. Can you promise me a lifetime of peace?",
+    "Sitting alone in the cold window, with the night rain falling quietly. My heart is like withered grass, and my tears have become a poem.",
+    "Flowers fade and fly, time is ruthless. The returning shadow in the sky only leaves traces of tears.",
+    "Flowers are in full bloom, and laughter is like a song. In the youthful years, there are full of traces of dreams.",
+    "Watching the flowers fall alone, my heart is filled with beautiful memories of you."
 ]
 
 # 随机生成金句函数
 def generate_golden_sentence():
     return random.choice(GOLDEN_SENTENCES)
 
+
 # 歌词生成函数
 def generate_lyrics(theme, demand):
     try:
         response = client.chat.completions.create(
-            model="glm-4-airx",
+            model="glm - 4 - airx",
             messages=[{
                 "role": "user",
-                "content": "作为一名华语作词专家，请为我写一首歌曲"
+                "content": "As a Chinese - language lyric - writing expert, please write a song for me."
             }, {
                 "role": "assistant",
-                "content": "当然，要创作歌词，请告诉我一些你的想法"
+                "content": "Of course, to create lyrics, please tell me some of your ideas."
             }, {
                 "role": "user",
-                "content": f"请根据以下要求生成歌词：主题：{theme}，要求：{demand} 请注意押韵是最重要的！！！"
+                "content": f"Please generate lyrics according to the following requirements: Theme: {theme}, Requirements: {demand} Please note that rhyming is the most important!!!"
             }]
         )
         return response.choices[0].message.content
     except Exception as e:
-        st.error(f"生成歌词失败：{str(e)}")
+        st.error(f"Failed to generate lyrics: {str(e)}")
         return None
 
+
 # 音乐创作（自定义模式）
-def create_music_custom(prompt, tags="", title="", continueClipId="", continueAt="", mvVersion="chirp-v4"):
+def create_music_custom(prompt, tags="", title="", continueClipId="", continueAt="", mvVersion="chirp - v4"):
     url = BASE_URL + "/_open/suno/music/generate"
     headers = {
         "key": API_KEY,
-        "x-token": X_TOKEN,
-        "x-userId": X_USERID
+        "x - token": X_TOKEN,
+        "x - userId": X_USERID
     }
     data = {
         "inputType": "20",
@@ -88,15 +92,16 @@ def create_music_custom(prompt, tags="", title="", continueClipId="", continueAt
     if response.status_code == 200:
         return response.json()
     else:
-        st.error(f"音乐创作请求失败，状态码：{response.status_code}，错误信息：{response.text}")
+        st.error(f"Music creation request failed, status code: {response.status_code}, error message: {response.text}")
         return None
+
 
 # 获取音乐生成状态并提取音频地址
 def get_music_state(taskBatchId):
     url = BASE_URL + f"/_open/suno/music/getState?taskBatchId={taskBatchId}"
     headers = {
-        "x-token": X_TOKEN,
-        "x-userId": X_USERID
+        "x - token": X_TOKEN,
+        "x - userId": X_USERID
     }
     mp3_urls = []
 
@@ -107,69 +112,73 @@ def get_music_state(taskBatchId):
             result = response.json()
 
             if 'data' not in result:
-                st.error("获取音乐状态响应格式错误：未找到'data'字段。")
+                st.error("The response format for getting the music state is incorrect: The 'data' field was not found.")
                 break
 
             for item in result['data'].get('items', []):
                 if item['status'] == 30:
                     mp3_urls.append(item.get('cld2AudioUrl'))
             if all(item['status'] == 30 for item in result['data']['items']):
-                st.success("所有音乐生成任务已成功完成。")
+                st.success("All music generation tasks have been successfully completed.")
                 break
             elif any(item['status'] == 40 for item in result['data']['items']):
-                st.error("部分音乐生成任务失败。")
+                st.error("Some music generation tasks failed.")
                 break
             time.sleep(10)
         else:
-            st.error(f"获取音乐状态出错，状态码：{response.status_code}，错误信息：{response.text}")
+            st.error(f"Error getting the music state, status code: {response.status_code}, error message: {response.text}")
             break
     if not mp3_urls:
-        st.warning("没有生成的音频。")
+        st.warning("There is no generated audio.")
     return mp3_urls
+
 
 # 合并整首歌
 def concat_whole_song(clipId):
     url = BASE_URL + f"/_open/suno/music/concat?clipId={clipId}"
     headers = {
-        "x-token": X_TOKEN,
-        "x-userId": X_USERID
+        "x - token": X_TOKEN,
+        "x - userId": X_USERID
     }
     response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         return response.json()
     else:
-        st.error(f"合并整首歌请求失败，状态码：{response.status_code}，错误信息：{response.text}")
+        st.error(f"Request to concatenate the whole song failed, status code: {response.status_code}, error message: {response.text}")
         return None
+
 
 # 创建人声伴奏分离任务
 def create_stems_task(clipId):
     url = BASE_URL + f"/_open/suno/music/stems?clipId={clipId}"
     headers = {
-        "x-token": X_TOKEN,
-        "x-userId": X_USERID
+        "x - token": X_TOKEN,
+        "x - userId": X_USERID
     }
     response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         return response.json()
     else:
-        st.error(f"人声伴奏分离任务创建失败，状态码：{response.status_code}，错误信息：{response.text}")
+        st.error(f"Failed to create the vocal - accompaniment separation task, status code: {response.status_code}, error message: {response.text}")
         return None
+
 
 # 辅助函数获取clipId
 def get_clip_id(audio_url):
-    match = re.search(r'([\w-]+)\.mp3', audio_url)
+    match = re.search(r'([\w - ]+)\.mp3', audio_url)
     if match:
         return match.group(1)
     return None
+
 
 # 获取人声伴奏分离状态
 def get_stems_state(taskBatchId):
     url = BASE_URL + f"/_open/suno/music/stemsState?taskBatchId={taskBatchId}"
     headers = {
-        "x-token": X_TOKEN,
-        "x-userId": X_USERID
+        "x - token": X_TOKEN,
+        "x - userId": X_USERID
     }
     while True:
         response = requests.get(url, headers=headers)
@@ -177,20 +186,21 @@ def get_stems_state(taskBatchId):
         if response.status_code == 200:
             result = response.json()
             if 'data' not in result:
-                st.error("获取分离状态响应格式错误：未找到'data'字段。")
+                st.error("The response format for getting the separation state is incorrect: The 'data' field was not found.")
                 break
 
             if result['data']['status'] == 1:  # 成功
-                st.success("人声伴奏分离任务完成！")
+                st.success("The vocal - accompaniment separation task is completed!")
                 return result['data']['audioUrls']
             elif result['data']['status'] == 2:  # 失败
-                st.error("人声伴奏分离任务失败。")
+                st.error("The vocal - accompaniment separation task failed.")
                 break
             time.sleep(10)
         else:
-            st.error(f"获取分离状态出错，状态码：{response.status_code}，错误信息：{response.text}")
+            st.error(f"Error getting the separation state, status code: {response.status_code}, error message: {response.text}")
             break
     return []
+
 
 # 高潮提取函数
 def extract_music_highlights(input_file, output_folder, highlight_duration):
@@ -210,45 +220,46 @@ def extract_music_highlights(input_file, output_folder, highlight_duration):
     else:
         return None
 
+
 # Streamlit应用
 def main():
-    st.title("智韵创音")
+    st.title("ZhiYun Music Creation")
 
     # 创建左右两列，调整比例使得音乐生成部分略大
     col1, col2 = st.columns([2, 3])
 
     # 歌词生成部分（左列）
     with col1:
-        st.header("歌词生成")
-        theme = st.text_input("主题", placeholder="请输入主题，如爱情、梦想等")
-        demand = st.text_area("其他要求", placeholder="请输入其他要求，如歌词结构、风格等")
+        st.header("Lyric Generation")
+        theme = st.text_input("Theme", placeholder="Please enter the theme, such as love, dreams, etc.")
+        demand = st.text_area("Other Requirements", placeholder="Please enter other requirements, such as lyric structure, style, etc.")
 
         # 按钮禁用逻辑
         if theme and demand:
-            generate_button = st.button("生成歌词")
+            generate_button = st.button("Generate Lyrics")
         else:
-            generate_button = st.button("生成歌词", disabled=True)
+            generate_button = st.button("Generate Lyrics", disabled=True)
 
         st.markdown('<hr>', unsafe_allow_html=True)
         if generate_button:
-            with st.spinner("生成歌词..."):
+            with st.spinner("Generating lyrics..."):
                 lyrics = generate_lyrics(theme, demand)
                 if lyrics:
-                    st.text_area("生成的歌词", value=lyrics, height=300)
+                    st.text_area("Generated Lyrics", value=lyrics, height=300)
                 else:
-                    st.warning("未能生成歌词，请稍后再试。")
+                    st.warning("Failed to generate lyrics. Please try again later.")
 
     # 音乐生成部分（右列）
     with col2:
-        st.header("音乐生成")
-        prompt = st.text_area("输入歌词", placeholder="请输入歌词", height=300)  # 调整高度为300像素
-        title = st.text_input("歌曲名称", placeholder="请输入歌曲名称")
+        st.header("Music Generation")
+        prompt = st.text_area("Enter Lyrics", placeholder="Please enter the lyrics", height=300)  # 调整高度为300像素
+        title = st.text_input("Song Name", placeholder="Please enter the song name")
 
         # 按钮禁用逻辑
         if prompt and title:
-            music_button = st.button("创作音乐")
+            music_button = st.button("Create Music")
         else:
-            music_button = st.button("创作音乐", disabled=True)
+            music_button = st.button("Create Music", disabled=True)
 
         if music_button:
             # 自定义模式创作音乐
@@ -256,55 +267,55 @@ def main():
             if creation_result:
                 task_batch_id = creation_result['data'].get('taskBatchId')
                 if task_batch_id:
-                    st.write(f"正在进行音乐生成。 {task_batch_id}")
+                    st.write(f"Music generation is in progress. {task_batch_id}")
                     # 获取音乐生成状态并获取音频地址
                     mp3_urls = get_music_state(task_batch_id)
                     if mp3_urls:
-                        st.write("播放MP3音频：")
+                        st.write("Play MP3 Audio:")
                         for url in mp3_urls:
                             st.audio(url)
 
                         # 仅在音乐生成成功后显示合并整首歌和人声伴奏分离按钮
-                        if st.button("合并整首歌"):
+                        if st.button("Concatenate the Whole Song"):
                             clip_id = get_clip_id(mp3_urls[0])
                             if clip_id:
                                 concat_result = concat_whole_song(clip_id)
                                 if concat_result:
-                                    st.write("合并整首歌任务已启动。任务信息：", concat_result)
+                                    st.write("The task of concatenating the whole song has been started. Task information:", concat_result)
 
-                        if st.button("人声伴奏分离"):
+                        if st.button("Separate Vocals and Accompaniment"):
                             clip_id = get_clip_id(mp3_urls[0])
                             if clip_id:
                                 stems_result = create_stems_task(clip_id)
                                 if stems_result:
                                     task_batch_id = stems_result['data'].get('taskBatchId')
                                     if task_batch_id:
-                                        st.write("人声伴奏分离任务已启动。正在处理...")
+                                        st.write("The vocal - accompaniment separation task has been started. Processing...")
                                         # 获取人声伴奏分离状态并播放分离后的音频
                                         audio_urls = get_stems_state(task_batch_id)
                                         if audio_urls:
-                                            st.write("分离结果：")
+                                            st.write("Separation Results:")
                                             for audio_url in audio_urls:
                                                 st.audio(audio_url)
                                         else:
-                                            st.error("人声伴奏分离失败，请稍后再试。")
+                                            st.error("Vocal - accompaniment separation failed. Please try again later.")
                                     else:
-                                        st.error("在响应中未找到人声伴奏分离任务ID。")
+                                        st.error("The vocal - accompaniment separation task ID was not found in the response.")
                                 else:
-                                    st.error("人声伴奏分离任务创建失败。")
+                                    st.error("Failed to create the vocal - accompaniment separation task.")
                     else:
-                        st.warning("没有生成的音频。")
+                        st.warning("There is no generated audio.")
                 else:
-                    st.error("在响应中未找到任务批次ID。")
+                    st.error("The task batch ID was not found in the response.")
             else:
-                st.error("音乐创作请求失败，请检查输入或联系管理员。")
+                st.error("Music creation request failed. Please check your input or contact the administrator.")
 
     # 高潮提取模块
-    st.header("铃声制作")
-    uploaded_file = st.file_uploader("请选择音乐文件上传", type=['mp3', 'wav'])
-    highlight_duration = st.number_input('铃声部分时长（秒）', min_value=1, value=15)
+    st.header("Ringtone Making")
+    uploaded_file = st.file_uploader("Please select a music file to upload", type=['mp3', 'wav'])
+    highlight_duration = st.number_input('Duration of the ringtone part (seconds)', min_value=1, value=15)
 
-    if st.button('点击制作铃声'):
+    if st.button('Click to Make Ringtone'):
         output_folder = r"C:\Users\12819\Music\help"
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
@@ -312,15 +323,15 @@ def main():
         extracted_file_path = extract_music_highlights(uploaded_file, output_folder, highlight_duration)
 
         if extracted_file_path:
-            st.success(f"成功提取音乐高潮部分，文件保存在: {extracted_file_path}")
+            st.success(f"Successfully extracted the highlight part of the music. The file is saved at: {extracted_file_path}")
             # 在线播放提取的音频
             st.audio(extracted_file_path)
         else:
-            st.error("提取音乐高潮部分失败。")
+            st.error("Failed to extract the highlight part of the music.")
 
     # 金句框架部分
-    st.header("金句推荐")
-    if st.button("生成金句"):
+    st.header("Golden Sentence Recommendation")
+    if st.button("Generate Golden Sentence"):
         golden_sentence = generate_golden_sentence()
         st.write(golden_sentence)
 
