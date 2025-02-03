@@ -461,4 +461,4 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 底部版权
-st.markdown("<footer>© 2024 最终版权刘昱樟所有 “智韵创音”音乐生成器</footer>", unsafe_allow_html=True)
+st.markdown("<footer>© 2024 最终版权刘昱樟所有 “智音”音乐生成器</footer>", unsafe_allow_html=True)
